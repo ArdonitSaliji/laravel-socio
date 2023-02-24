@@ -16,7 +16,7 @@ const registerSchema = yup.object().shape({
     password: yup.string().required('required'),
     location: yup.string().required('required'),
     occupation: yup.string().required('required'),
-    picture: yup.string().required('required'),
+    picture: yup.string().nullable().optional(),
 });
 
 const loginSchema = yup.object().shape({
@@ -54,9 +54,12 @@ const Form = () => {
         for (let value in values) {
             formData.append(value, values[value]);
         }
-        formData.append('picturePath', values.picture.name);
 
-        const savedUserResponse = await fetch('http://localhost:8000/api/register', {
+        values.picture
+            ? formData.append('picturePath', values.picture.name)
+            : formData.append('picturePath', 'null');
+
+        const savedUserResponse = await fetch('http://localhost:8000/api/signup', {
             method: 'POST',
             body: formData,
         });
@@ -76,7 +79,6 @@ const Form = () => {
         });
         const loggedIn = await loggedInResponse.json();
         loggedIn.user.friends = JSON.parse(loggedIn.user.friends);
-        console.log(loggedIn);
         onSubmitProps.resetForm();
         if (loggedIn) {
             dispatch(
@@ -173,7 +175,7 @@ const Form = () => {
                                         acceptedFiles='.jpg,.jpeg,.png'
                                         multiple={false}
                                         onDrop={(acceptedFiles) =>
-                                            setFieldValue('picture', acceptedFiles[0])
+                                            setFieldValue('picture', acceptedFiles[0]) || ''
                                         }
                                     >
                                         {({ getRootProps, getInputProps }) => (
