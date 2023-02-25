@@ -107,23 +107,18 @@ data = [
 
 module.exports = posts = [
     {
-        userId: userIds[1],
+        userId: 4,
         firstName: 'Steve',
         lastName: 'Ralph',
         location: 'New York, CA',
         description: 'Some really long random description',
         picturePath: 'post1.jpeg',
         userPicturePath: 'p3.jpeg',
-        likes: new Map([
-            [userIds[0], true],
-            [userIds[2], true],
-            [userIds[3], true],
-            [userIds[4], true],
-        ]),
+        likes: new Map([]),
         comments: ['random comment', 'another random comment', 'yet another random comment'],
     },
     {
-        userId: userIds[3],
+        userId: 6,
         firstName: 'Whatcha',
         lastName: 'Doing',
         location: 'Korea, CA',
@@ -131,12 +126,7 @@ module.exports = posts = [
             'Another really long random description. This one is longer than the previous one.',
         picturePath: 'post2.jpeg',
         userPicturePath: 'p6.jpeg',
-        likes: new Map([
-            [userIds[7], true],
-            [userIds[4], true],
-            [userIds[1], true],
-            [userIds[2], true],
-        ]),
+        likes: new Map([]),
         comments: [
             'one more random comment',
             'and another random comment',
@@ -145,7 +135,7 @@ module.exports = posts = [
         ],
     },
     {
-        userId: userIds[4],
+        userId: 7,
         firstName: 'Jane',
         lastName: 'Doe',
         location: 'Utah, CA',
@@ -153,12 +143,7 @@ module.exports = posts = [
             'This is the last really long random description. This one is longer than the previous one.',
         picturePath: 'post3.jpeg',
         userPicturePath: 'p5.jpeg',
-        likes: new Map([
-            [userIds[1], true],
-            [userIds[6], true],
-            [userIds[3], true],
-            [userIds[5], true],
-        ]),
+        likes: new Map([]),
         comments: [
             'one more random comment',
             'I lied, one more random comment',
@@ -168,7 +153,7 @@ module.exports = posts = [
         ],
     },
     {
-        userId: userIds[5],
+        userId: 8,
         firstName: 'Harvey',
         lastName: 'Dunn',
         location: 'Los Angeles, CA',
@@ -176,11 +161,7 @@ module.exports = posts = [
             "This is the last really long random description. This one is longer than the previous one. Man I'm bored. I'm going to keep typing until I run out of things to say.",
         picturePath: 'post4.jpeg',
         userPicturePath: 'p7.jpeg',
-        likes: new Map([
-            [userIds[1], true],
-            [userIds[6], true],
-            [userIds[3], true],
-        ]),
+        likes: new Map([]),
         comments: [
             'I lied again, one more random comment',
             'Why am I doing this?',
@@ -191,7 +172,7 @@ module.exports = posts = [
         ],
     },
     {
-        userId: userIds[6],
+        userId: 9,
         firstName: 'Carly',
         lastName: 'Vowel',
         location: 'Chicago, IL',
@@ -199,12 +180,7 @@ module.exports = posts = [
             "Just a short description. I'm tired of typing. I'm going to play video games now.",
         picturePath: 'post5.jpeg',
         userPicturePath: 'p8.jpeg',
-        likes: new Map([
-            [userIds[1], true],
-            [userIds[3], true],
-            [userIds[5], true],
-            [userIds[7], true],
-        ]),
+        likes: new Map([]),
         comments: [
             'I lied again, one more random comment',
             'Why am I doing this?',
@@ -214,7 +190,7 @@ module.exports = posts = [
         ],
     },
     {
-        userId: userIds[7],
+        userId: 10,
         firstName: 'Jessica',
         lastName: 'Dunn',
         location: 'Washington, DC',
@@ -222,10 +198,7 @@ module.exports = posts = [
             "For the last time, I'm going to play video games now. I'm tired of typing. I'm going to play video games now.",
         picturePath: 'post6.jpeg',
         userPicturePath: 'p9.jpeg',
-        likes: new Map([
-            [userIds[1], true],
-            [userIds[2], true],
-        ]),
+        likes: new Map([]),
 
         comments: [
             'Can I play video games now?',

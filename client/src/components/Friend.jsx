@@ -16,12 +16,13 @@ import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setFriends, setPosts } from 'state';
+import { setFriends } from 'state';
 import EditPost from './EditPost';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 
 const Friend = ({
+    deletePost,
     postId,
     friendId,
     picturePath,
@@ -33,7 +34,7 @@ const Friend = ({
 }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { _id } = useSelector((state) => state.user);
+    const { id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const friends = useSelector((state) => state.user.friends);
     const posts = useSelector((state) => state.posts);
@@ -50,10 +51,11 @@ const Friend = ({
     const primaryDark = palette.primary.dark;
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
-    const isFriend = friends.length > 0 && friends?.find((friend) => friend._id === friendId);
+    const isFriend =
+        friends && friends.length > 0 && friends?.find((friend) => friend._id === friendId);
 
     const patchFriend = async () => {
-        const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`, {
+        const response = await fetch(`http://localhost:3001/users/${id}/${friendId}`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -77,26 +79,6 @@ const Friend = ({
             bottom: '0',
         },
     }));
-
-    const deletePost = async () => {
-        const response = await fetch(`http://localhost:3001/posts/${postId}/delete/post`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId: _id,
-            }),
-        });
-        const { allPosts, userPosts } = await response.json();
-
-        if (window.location.pathname === '/home') {
-            dispatch(setPosts({ posts: allPosts }));
-        } else {
-            dispatch(setPosts({ posts: userPosts }));
-        }
-    };
 
     function SearchResults() {
         const classes = useStyles();

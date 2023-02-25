@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setLogin } from 'state';
 import Dropzone from 'react-dropzone';
 import FlexBetween from 'components/FlexBetween';
+import { toast } from 'react-toastify';
 
 const registerSchema = yup.object().shape({
     firstName: yup.string().required('required'),
@@ -64,9 +65,15 @@ const Form = () => {
             body: formData,
         });
         const savedUser = await savedUserResponse.json();
-        onSubmitProps.resetForm();
 
-        if (savedUser) {
+        if (savedUser.status === 409) {
+            toast.error('Email already exists!');
+        } else {
+            toast.success('Signup successful!');
+            onSubmitProps.resetForm();
+        }
+
+        if (savedUser.status !== 409) {
             setPageType('login');
         }
     };
@@ -77,10 +84,13 @@ const Form = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values),
         });
+
         const loggedIn = await loggedInResponse.json();
-        loggedIn.user.friends = JSON.parse(loggedIn.user.friends);
-        onSubmitProps.resetForm();
-        if (loggedIn) {
+        loggedIn.user && (loggedIn.user.friends = JSON.parse(loggedIn.user.friends));
+
+        if (loggedIn.status === 200) {
+            onSubmitProps.resetForm();
+            toast.success('Login successful!');
             dispatch(
                 setLogin({
                     user: loggedIn.user,
@@ -88,6 +98,8 @@ const Form = () => {
                 })
             );
             navigate('/home');
+        } else if (loggedIn.status === 403) {
+            toast.error('Invalid credentials!');
         }
     };
 
