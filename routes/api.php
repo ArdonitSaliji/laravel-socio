@@ -107,6 +107,7 @@ Route::post('/posts', function (Request $request) {
 Route::post('/posts/{postId}/delete', function ($postId) {
 
     post::where('id', $postId)->delete();
+    
     $allPosts = post::all();
 
     return response()->json($allPosts);

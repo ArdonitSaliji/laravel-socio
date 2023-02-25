@@ -7,6 +7,7 @@ import {
 import { Box, Divider, IconButton, Typography, useTheme } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
+import PostOptions from 'components/PostOptions';
 import WidgetWrapper from 'components/WidgetWrapper';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -68,27 +69,36 @@ const PostWidget = ({
 
     return (
         <WidgetWrapper m='2rem 0'>
-            <Friend
-                deletePost={deletePost}
-                postId={postId}
-                description={description}
-                picturePath={picturePath}
-                profile={profile}
-                friendId={postUserId}
-                name={name}
-                subtitle={location}
-                userPicturePath={userPicturePath}
-            />
+            {profile ? (
+                <PostOptions
+                    deletePost={deletePost}
+                    postId={postId}
+                    description={description}
+                    friendId={postUserId}
+                    name={name}
+                    subtitle={location}
+                    userPicturePath={userPicturePath}
+                />
+            ) : (
+                <Friend
+                    friendId={postUserId}
+                    name={name}
+                    subtitle={location}
+                    userPicturePath={userPicturePath}
+                />
+            )}
+
             <Typography color={main} sx={{ mt: '1rem' }}>
                 {description}
             </Typography>
+
             {picturePath && (
                 <img
                     width='100%'
                     height='auto'
                     alt=''
                     style={{ borderRadius: '0.75rem', marginTop: '0.75rem' }}
-                    src={`http://localhost:3001/assets/${picturePath}`}
+                    src={`http://localhost:8000/assets/${picturePath}`}
                 />
             )}
             <FlexBetween mt='0.25rem'>
