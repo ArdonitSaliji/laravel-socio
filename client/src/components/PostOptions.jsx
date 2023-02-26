@@ -87,10 +87,11 @@ const PostOptions = ({ postId, description, friendId, name, subtitle, userPictur
                             <ListItemButton
                                 sx={{ height: '2rem' }}
                                 id={postId}
-                                onClick={(e) => {
+                                onClick={() => {
+                                    let findPost = posts.find((post) => post.id === postId);
                                     setPopup({
                                         ...popup,
-                                        post: e.target.id,
+                                        post: findPost,
                                         open: true,
                                     });
                                 }}
