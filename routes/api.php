@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\user;
 use App\Models\post;
-use GuzzleHttp\Promise\Promise;
 use Illuminate\Support\Carbon;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -82,13 +81,22 @@ Route::get('/posts', function () {
 
 Route::post('/posts', function (Request $request) {
     $user = user::where('id', $request->userId)->first();
+    
+    $request->validate([
+        'picture' => 'required|image|mimes:png,jpg,jpeg,webp|max:5048'
+    ]);
+    
+    $imageName = time().'.'.$request->picture->extension();
+
+    $request->picture->move(public_path('assets'), $imageName);
+
     $post = [
         'userId' => $request->userId,
         'firstName' => $user->firstName,
         'lastName' =>  $user->lastName,
         'location' => $user ->location,
         'description' => $request->description,
-        'picturePath' => $request->picturePath,
+        'picturePath' => $imageName,
         'userPicturePath' => $user->picturePath,
         'likes' => '[]',
         'comments' => '[]',
@@ -108,6 +116,13 @@ Route::post('/posts/{postId}/delete', function ($postId) {
 
     post::where('id', $postId)->delete();
     
+    $file = post::where('id', $postId)->picturePath;
+
+    if(file_exists(public_path($file))) {
+        unlink(public_path($file));
+    }
+
+
     $allPosts = post::all();
 
     return response()->json($allPosts);
