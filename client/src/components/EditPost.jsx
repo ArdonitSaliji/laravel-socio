@@ -92,7 +92,7 @@ export default function EditPost(props) {
                     {showImage && post.picturePath && (
                         <>
                             <img
-                                src={`http://localhost:3001/assets/${post.picturePath}`}
+                                src={`http://localhost:8000/assets/${post.picturePath}`}
                                 style={{ width: '18rem', height: '18rem' }}
                                 alt=''
                             />

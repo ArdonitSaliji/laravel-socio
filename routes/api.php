@@ -112,16 +112,14 @@ Route::post('/posts', function (Request $request) {
     
 });
 
-Route::post('/posts/{postId}/delete', function ($postId) {
-
-    post::where('id', $postId)->delete();
+Route::post('/posts/{postId}/delete', function ($postId) {    
+    $file = post::where('id', $postId)->first();
     
-    $file = post::where('id', $postId)->picturePath;
-
-    if(file_exists(public_path($file))) {
-        unlink(public_path($file));
+    if(file_exists(public_path('assets/' . $file->picturePath))) {
+        unlink(public_path('assets/' . $file->picturePath));
     }
-
+    
+    post::where('id', $postId)->delete();
 
     $allPosts = post::all();
 
