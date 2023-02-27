@@ -48,7 +48,7 @@ Route::post('/signup', function (Request $request) {
         
     $newUser = new user;
     $newUser->fill($user);
-    $newUser->save();
+    $newUser->save(); 
     
     return response()->json(['message' => $newUser, 'status' => 201], 201);;
 });
@@ -69,7 +69,7 @@ Route::get('users/{userId}/friends', function ($userId) {
     
     $parse = json_decode($findFriends->friends, true);
 
-    $friends = User::whereIn('id', $parse)->get();
+    $friends = user::whereIn('id', $parse)->get();
 
     return response()->json($friends);
 });
@@ -82,40 +82,45 @@ Route::get('/posts', function () {
 Route::post('/posts', function (Request $request) {
     $user = user::where('id', $request->userId)->first();
     
-    $request->validate([
-        'picture' => 'required|image|mimes:png,jpg,jpeg,webp|max:5048'
-    ]);
-    
-    $imageName = time().'.'.$request->picture->extension();
-
-    $request->picture->move(public_path('assets'), $imageName);
-
     $post = [
         'userId' => $request->userId,
         'firstName' => $user->firstName,
         'lastName' =>  $user->lastName,
         'location' => $user ->location,
         'description' => $request->description,
-        'picturePath' => $imageName,
+        'picturePath' => '',
         'userPicturePath' => $user->picturePath,
         'likes' => '[]',
         'comments' => '[]',
         'created_at' => Carbon::now()->timestamp,
         'updated_at' =>  Carbon::now()->timestamp,
     ];
-    $newPost = new post;
-    $newPost->fill($post);
-    $newPost->save();
-    $allPosts = post::all();
-
-    return response()->json($allPosts);
     
+    $newPost = new post;
+
+    if($request->picture) {
+        $request->validate([
+            'picture' => 'required|image|mimes:png,jpg,jpeg,webp|max:5048'
+        ]);
+        
+        $imageName = time().'.'.$request->picture->extension();
+        $request->picture->move(public_path('assets'), $imageName);
+        $post['picturePath'] = $imageName;
+        
+    } else {
+        $post['picturePath'] = '';
+    };
+
+        $newPost->fill($post);
+        $newPost->save();
+        $allPosts = post::all();
+        return response()->json($allPosts);
+
 });
 
 Route::post('/posts/{postId}/delete', function ($postId) {    
     $file = post::where('id', $postId)->first();
-    
-    if(file_exists(public_path('assets/' . $file->picturePath))) {
+    if ($file->picturePath) {
         unlink(public_path('assets/' . $file->picturePath));
     }
     
@@ -124,4 +129,44 @@ Route::post('/posts/{postId}/delete', function ($postId) {
     $allPosts = post::all();
 
     return response()->json($allPosts);
+});
+
+Route::patch('/users/{id}/{friendId}', function ($id, $friendId) {
+
+    $user = user::findOrFail($id);
+    $friend = user::findOrFail($friendId);
+    
+
+    $userFriends = json_decode($user->friends, true);
+    $friendFriends = json_decode($friend->friends, true);
+
+    $friendId = intval($friendId);
+    $id = intval($id);
+
+    if (in_array($friendId, $userFriends)) {
+        $userFriends = array_filter($userFriends, function($value) use ($friendId) {
+            return $value !== $friendId;
+        });
+        if($friendFriends) {
+            $friendFriends = array_filter($friendFriends, function($value) use ($id) {
+            return $value !== $id;
+        });    
+        }
+    
+    } else {
+        $userFriends[] = $friendId;
+        $friendFriends[] = $id;
+    }
+    
+    $user->friends = json_encode($userFriends);
+    $friend->friends = json_encode($friendFriends);
+
+    $user->save();
+    $friend->save();
+
+    $user->friends = json_decode($user->friends, true);
+
+    $userFriends = user::whereIn('id', $user->friends)->get();
+    return response()->json($userFriends);
+
 });
