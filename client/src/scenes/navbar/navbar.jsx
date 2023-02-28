@@ -58,7 +58,6 @@ const Navbar = () => {
                 }),
             });
             const data = await response.json();
-            console.log(data);
             data.length > 0 ? dispatch(setSearchUsers(data)) : dispatch(setSearchUsers(''));
         } else {
             dispatch(setSearchUsers(''));

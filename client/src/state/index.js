@@ -46,6 +46,9 @@ export const authSlice = createSlice({
         setIsProfile: (state, action) => {
             state.isProfile = action.payload;
         },
+        setFriendMessage: (state, action) => {
+            state.friendMessage = action.payload;
+        },
     },
 });
 
@@ -58,5 +61,6 @@ export const {
     setPost,
     setSearchUsers,
     setIsProfile,
+    setFriendMessage,
 } = authSlice.actions;
 export default authSlice.reducer;

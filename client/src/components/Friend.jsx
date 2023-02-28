@@ -3,8 +3,8 @@ import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setFriends } from 'state';
-
+import { setFriends, setFriendMessage } from 'state';
+import MessageIcon from '@mui/icons-material/Message';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 
@@ -68,12 +68,20 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
             {/* Add or remove friend button */}
 
             {isFriend ? (
-                <IconButton
-                    onClick={() => patchFriend()}
-                    sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
-                >
-                    <PersonRemoveOutlined sx={{ color: primaryDark }} />
-                </IconButton>
+                <div>
+                    <IconButton
+                        onClick={() => patchFriend()}
+                        sx={{ backgroundColor: primaryLight, p: '0.6rem', mr: '0.5rem' }}
+                    >
+                        <PersonRemoveOutlined sx={{ color: primaryDark }} />
+                    </IconButton>
+                    <IconButton
+                        onClick={() => {}}
+                        sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
+                    >
+                        <MessageIcon sx={{ color: primaryDark }} />
+                    </IconButton>
+                </div>
             ) : (
                 <IconButton
                     onClick={() => patchFriend()}
