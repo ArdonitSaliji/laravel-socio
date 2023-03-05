@@ -49,7 +49,6 @@ const Navbar = () => {
 
     const handleSearch = async (e) => {
         if (e.target.value) {
-            let arr = e.target.value.split('');
             const response = await fetch(`http://localhost:3001/users/find`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

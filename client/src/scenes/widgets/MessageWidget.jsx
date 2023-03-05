@@ -26,11 +26,35 @@ const MessageWidget = ({ friendPicture }) => {
     let messageStyling = {
         padding: '0.25rem 0.7rem',
         backgroundColor: palette.primary.light,
-        textAlign: 'center',
+        textAlign: 'right',
         borderRadius: '15px',
         margin: '3px 0',
         width: 'fit-content',
+        maxWidth: '60%',
     };
+
+    let theirStyling = {
+        padding: '0.25rem 0.7rem',
+        backgroundColor: '#3e4042',
+        textAlign: 'left',
+        borderRadius: '15px',
+        margin: '3px 0',
+        width: 'fit-content',
+        maxWidth: '60%',
+    };
+
+    let theirMessages = {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'left',
+    };
+
+    let ourMessages = {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'right',
+    };
+
     return (
         <WidgetWrapper sx={styles}>
             <FlexBetween sx={{ width: '100%', p: '0 0.5rem' }}>
@@ -92,7 +116,6 @@ const MessageWidget = ({ friendPicture }) => {
                     sx={{
                         flexDirection: 'column',
                         display: 'flex',
-                        alignItems: 'end',
                         width: '100%',
                         height: '10rem',
                         padding: '0 1rem',
@@ -107,30 +130,44 @@ const MessageWidget = ({ friendPicture }) => {
                             mt: '1rem',
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'end',
+                            width: '100%',
+                            alignItems: 'flex-end',
                         }}
                     >
-                        <ListItem sx={messageStyling}>
-                            <ListItemText
-                                sx={{ width: 'auto' }}
-                                primary='Hey How is it going man?'
-                            />
-                        </ListItem>
-                        <ListItem sx={messageStyling}>
-                            <ListItemText sx={{ width: 'auto' }} primary='How is work?' />
-                        </ListItem>
-                        <ListItem sx={messageStyling}>
-                            <ListItemText
-                                sx={{ width: '100%' }}
-                                primary='I see you got back from your Vacation'
-                            />
-                        </ListItem>
-                        <ListItem sx={messageStyling}>
-                            <ListItemText sx={{ width: '100%' }} primary="How's life?" />
-                        </ListItem>
-                        <ListItem sx={messageStyling}>
-                            <ListItemText sx={{ width: '100%' }} primary='Hope you get better!' />
-                        </ListItem>
+                        <div style={theirMessages}>
+                            <ListItem sx={theirStyling}>
+                                <ListItemText
+                                    sx={{ width: 'auto' }}
+                                    primary='Hey How is it going man?'
+                                />
+                            </ListItem>
+                        </div>
+                        <div style={ourMessages}>
+                            <ListItem sx={messageStyling}>
+                                <ListItemText sx={{ width: 'auto' }} primary='How is work?' />
+                            </ListItem>
+                        </div>
+                        <div style={theirMessages}>
+                            <ListItem sx={theirStyling}>
+                                <ListItemText
+                                    sx={{ width: '100%' }}
+                                    primary='I see you got back from your Vacation'
+                                />
+                            </ListItem>
+                        </div>
+                        <div style={ourMessages}>
+                            <ListItem sx={messageStyling}>
+                                <ListItemText sx={{ width: '100%' }} primary="How's life?" />
+                            </ListItem>
+                        </div>
+                        <div style={ourMessages}>
+                            <ListItem sx={messageStyling}>
+                                <ListItemText
+                                    sx={{ width: '100%' }}
+                                    primary='Hope you get better!'
+                                />
+                            </ListItem>
+                        </div>
                     </List>
                 </FlexBetween>
                 <FlexBetween position='fixed' bottom='0' mb='1rem'>
