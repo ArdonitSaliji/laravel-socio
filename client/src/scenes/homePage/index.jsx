@@ -7,7 +7,6 @@ import PostsWidget from 'scenes/widgets/PostsWidget';
 import AdvertWidget from 'scenes/widgets/AdvertWidget';
 import FriendListWidget from 'scenes/widgets/FriendListWidget';
 import MessageWidget from 'scenes/widgets/MessageWidget';
-import { useState } from 'react';
 
 const HomePage = () => {
     const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
@@ -15,10 +14,11 @@ const HomePage = () => {
     const { id, picturePath } = useSelector((state) => {
         return state.user;
     });
+    const friend = useSelector((state) => state.chatWithFriend);
 
     return (
         <Box>
-            <MessageWidget />
+            {friend && <MessageWidget friend={friend} />}
             <Navbar />
             <Box
                 width='100%'

@@ -13,8 +13,9 @@ Route::post('/signup', [Auth::class, 'signup']);
 
 
 // User Routes
-Route::get('/users/{userId}', [Users::class, 'getUserId']);
-Route::get('users/{userId}/friends', [Users::class, 'getUserFriends']);
+Route::post('/users/id', [Users::class, 'getUser']);
+Route::get('/users/{userId}', [Users::class, 'getUserProfile']);
+Route::get('/users/{userId}/friends', [Users::class, 'getUserFriends']);
 Route::patch('/users/{id}/{friendId}', [Users::class, 'addOrRemoveFriend']);
 
 

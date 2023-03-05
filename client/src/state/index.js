@@ -6,6 +6,7 @@ const initialState = {
     token: null,
     posts: [],
     searchUsers: '',
+    messageFriend: null,
 };
 
 export const authSlice = createSlice({
@@ -35,7 +36,7 @@ export const authSlice = createSlice({
         },
         setPost: (state, action) => {
             const updatedPosts = state.posts.map((post) => {
-                if (post._id === action.payload.post._id) return action.payload.post;
+                if (post.id === action.payload.post.id) return action.payload.post;
                 return post;
             });
             state.posts = updatedPosts;
@@ -46,8 +47,8 @@ export const authSlice = createSlice({
         setIsProfile: (state, action) => {
             state.isProfile = action.payload;
         },
-        setFriendMessage: (state, action) => {
-            state.friendMessage = action.payload;
+        setChatWithFriend: (state, action) => {
+            state.chatWithFriend = action.payload;
         },
     },
 });
@@ -61,6 +62,6 @@ export const {
     setPost,
     setSearchUsers,
     setIsProfile,
-    setFriendMessage,
+    setChatWithFriend,
 } = authSlice.actions;
 export default authSlice.reducer;

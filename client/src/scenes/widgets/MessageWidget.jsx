@@ -9,8 +9,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
+import { useDispatch, useSelector } from 'react-redux';
+import { setChatWithFriend } from 'state';
 
-const MessageWidget = ({ friendPicture }) => {
+const MessageWidget = ({ friend }) => {
+    const { palette } = useTheme();
+    const { picturePath, firstName, lastName, location } = friend;
+    const dispatch = useDispatch();
     const styles = {
         position: 'fixed',
         bottom: '0',
@@ -21,11 +26,9 @@ const MessageWidget = ({ friendPicture }) => {
         padding: '0.5rem 0 0.75rem 0rem',
     };
 
-    const { palette } = useTheme();
-
-    let messageStyling = {
+    let outStyling = {
         padding: '0.25rem 0.7rem',
-        backgroundColor: palette.primary.light,
+        backgroundColor: '#00353F !important',
         textAlign: 'right',
         borderRadius: '15px',
         margin: '3px 0',
@@ -35,7 +38,7 @@ const MessageWidget = ({ friendPicture }) => {
 
     let theirStyling = {
         padding: '0.25rem 0.7rem',
-        backgroundColor: '#3e4042',
+        backgroundColor: '#3e4042 !important',
         textAlign: 'left',
         borderRadius: '15px',
         margin: '3px 0',
@@ -54,12 +57,11 @@ const MessageWidget = ({ friendPicture }) => {
         display: 'flex',
         justifyContent: 'right',
     };
-
     return (
         <WidgetWrapper sx={styles}>
             <FlexBetween sx={{ width: '100%', p: '0 0.5rem' }}>
                 <FlexBetween>
-                    <UserImage image={'ardonit.jpg'} size={'35px'} />
+                    <UserImage image={picturePath} size={'35px'} />
                     <Box sx={{ ml: '0.5rem' }}>
                         <Typography
                             variant='h5'
@@ -70,7 +72,7 @@ const MessageWidget = ({ friendPicture }) => {
                                 },
                             }}
                         >
-                            Ardonit Saliji
+                            {firstName} {lastName}
                         </Typography>
                         <Typography>Active Now</Typography>
                     </Box>
@@ -84,12 +86,15 @@ const MessageWidget = ({ friendPicture }) => {
                         mr: '0.5rem',
                     }}
                     fontSize='large'
+                    onClick={() => {
+                        dispatch(setChatWithFriend(null));
+                    }}
                 />
             </FlexBetween>
             <hr style={{ width: '100%' }} />
             <Box sx={{ overflowY: 'scroll' }}>
                 <Box display='flex' flexDirection='column' alignItems='center' mt='2rem'>
-                    <UserImage image={'ardonit.jpg'} />
+                    <UserImage image={picturePath} />
                     <Typography
                         variant='h4'
                         fontWeight='500'
@@ -100,7 +105,7 @@ const MessageWidget = ({ friendPicture }) => {
                             },
                         }}
                     >
-                        Ardonit Saliji
+                        {firstName} {lastName}
                     </Typography>
                     <Typography
                         variant='subtitle1'
@@ -109,7 +114,7 @@ const MessageWidget = ({ friendPicture }) => {
                             color: palette.primary.main,
                         }}
                     >
-                        Lives in Tearce, Tearce, Macedonia
+                        Lives in {location}
                     </Typography>
                 </Box>
                 <FlexBetween
@@ -121,10 +126,6 @@ const MessageWidget = ({ friendPicture }) => {
                         padding: '0 1rem',
                     }}
                 >
-                    {/* <Typography>Hi</Typography>
-                    <Typography>Hi</Typography>
-                    <Typography>Hi</Typography>
-                    <Typography>Hi</Typography> */}
                     <List
                         sx={{
                             mt: '1rem',
@@ -143,28 +144,23 @@ const MessageWidget = ({ friendPicture }) => {
                             </ListItem>
                         </div>
                         <div style={ourMessages}>
-                            <ListItem sx={messageStyling}>
-                                <ListItemText sx={{ width: 'auto' }} primary='How is work?' />
+                            <ListItem sx={outStyling}>
+                                <ListItemText sx={{ width: 'auto' }} primary='Good man wby?' />
                             </ListItem>
                         </div>
                         <div style={theirMessages}>
                             <ListItem sx={theirStyling}>
                                 <ListItemText
                                     sx={{ width: '100%' }}
-                                    primary='I see you got back from your Vacation'
+                                    primary='Fine thanks! I see you got back from your Vacation, how was it?'
                                 />
                             </ListItem>
                         </div>
                         <div style={ourMessages}>
-                            <ListItem sx={messageStyling}>
-                                <ListItemText sx={{ width: '100%' }} primary="How's life?" />
-                            </ListItem>
-                        </div>
-                        <div style={ourMessages}>
-                            <ListItem sx={messageStyling}>
+                            <ListItem sx={outStyling}>
                                 <ListItemText
                                     sx={{ width: '100%' }}
-                                    primary='Hope you get better!'
+                                    primary='Yeah, it was great!'
                                 />
                             </ListItem>
                         </div>

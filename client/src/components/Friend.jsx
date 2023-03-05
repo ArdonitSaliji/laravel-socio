@@ -3,7 +3,7 @@ import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setFriends, setFriendMessage } from 'state';
+import { setChatWithFriend, setFriends, setMessageFriend } from 'state';
 import MessageIcon from '@mui/icons-material/Message';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
@@ -24,16 +24,32 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         friends && friends.length > 0 && friends?.find((friend) => friend.id === friendId);
 
     const patchFriend = async () => {
-        const response = await fetch(`http://localhost:8000/api/users/${id}/${friendId}`, {
+        const res = await fetch(`http://localhost:8000/api/users/${id}/${friendId}`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         });
-        const data = await response.json();
+        const data = await res.json();
 
         dispatch(setFriends({ friends: data }));
+    };
+
+    const getFriend = async () => {
+        const res = await fetch(`http://localhost:8000/api/users/id`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                friendId: friendId,
+            }),
+        });
+
+        let json = await res.json();
+        dispatch(setChatWithFriend(json));
     };
 
     return (
@@ -76,7 +92,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
                         <PersonRemoveOutlined sx={{ color: primaryDark }} />
                     </IconButton>
                     <IconButton
-                        onClick={() => {}}
+                        onClick={() => getFriend()}
                         sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
                     >
                         <MessageIcon sx={{ color: primaryDark }} />

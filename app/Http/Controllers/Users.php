@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class Users extends Controller
 {
-    public function getUserId($userId) {
+    public function getUserProfile($userId) {
         $findUser = user::where('id', $userId)->first();
         if($findUser) {
             return response()->json($findUser, 200);  
@@ -52,6 +52,13 @@ class Users extends Controller
         $user->friends = json_decode($user->friends, true);
         $userFriends = user::whereIn('id', $user->friends)->get();
         return response()->json($userFriends);
-        
+    }
+
+    public function getUser(Request $req) {
+        $friendId = $req->friendId;
+
+        $friend = user::where('id', $friendId)->first();
+
+        return response()->json($friend);
     }
 }
