@@ -7,6 +7,10 @@ const initialState = {
     posts: [],
     searchUsers: '',
     messageFriend: null,
+    chatWithFriend: {
+        friend: null,
+        messages: null,
+    },
 };
 
 export const authSlice = createSlice({
@@ -50,6 +54,9 @@ export const authSlice = createSlice({
         setChatWithFriend: (state, action) => {
             state.chatWithFriend = action.payload;
         },
+        updateChatWithFriend: (state, action) => {
+            state.chatWithFriend.messages = action.payload;
+        },
     },
 });
 
@@ -63,5 +70,6 @@ export const {
     setSearchUsers,
     setIsProfile,
     setChatWithFriend,
+    updateChatWithFriend,
 } = authSlice.actions;
 export default authSlice.reducer;

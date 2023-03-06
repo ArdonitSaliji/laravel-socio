@@ -18,7 +18,7 @@ const HomePage = () => {
 
     return (
         <Box>
-            {friend && <MessageWidget friend={friend} />}
+            {friend?.friend && <MessageWidget friend={friend} />}
             <Navbar />
             <Box
                 width='100%'

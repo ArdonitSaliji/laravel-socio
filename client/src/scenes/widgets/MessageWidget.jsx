@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import WidgetWrapper from 'components/WidgetWrapper';
 import FlexBetween from 'components/FlexBetween';
 import UserImage from 'components/UserImage';
@@ -10,12 +10,18 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChatWithFriend } from 'state';
+import { setChatWithFriend, updateChatWithFriend } from 'state';
 
 const MessageWidget = ({ friend }) => {
     const { palette } = useTheme();
-    const { picturePath, firstName, lastName, location } = friend;
+    const { picturePath, firstName, lastName, location } = friend.friend;
+    const friendId = friend.friend.id;
+    const userId = useSelector((state) => state.user.id);
+    const chat = friend.messages;
+
     const dispatch = useDispatch();
+    const [input, setInput] = useState(null);
+
     const styles = {
         position: 'fixed',
         bottom: '0',
@@ -57,6 +63,20 @@ const MessageWidget = ({ friend }) => {
         display: 'flex',
         justifyContent: 'right',
     };
+
+    const messageFriend = async () => {
+        const response = await fetch('http://localhost:8000/api/users/message/friend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, friendId, input }),
+        });
+
+        let json = await response.json();
+        dispatch(updateChatWithFriend(json));
+    };
+
     return (
         <WidgetWrapper sx={styles}>
             <FlexBetween sx={{ width: '100%', p: '0 0.5rem' }}>
@@ -135,35 +155,27 @@ const MessageWidget = ({ friend }) => {
                             alignItems: 'flex-end',
                         }}
                     >
-                        <div style={theirMessages}>
-                            <ListItem sx={theirStyling}>
-                                <ListItemText
-                                    sx={{ width: 'auto' }}
-                                    primary='Hey How is it going man?'
-                                />
-                            </ListItem>
-                        </div>
-                        <div style={ourMessages}>
-                            <ListItem sx={outStyling}>
-                                <ListItemText sx={{ width: 'auto' }} primary='Good man wby?' />
-                            </ListItem>
-                        </div>
-                        <div style={theirMessages}>
-                            <ListItem sx={theirStyling}>
-                                <ListItemText
-                                    sx={{ width: '100%' }}
-                                    primary='Fine thanks! I see you got back from your Vacation, how was it?'
-                                />
-                            </ListItem>
-                        </div>
-                        <div style={ourMessages}>
-                            <ListItem sx={outStyling}>
-                                <ListItemText
-                                    sx={{ width: '100%' }}
-                                    primary='Yeah, it was great!'
-                                />
-                            </ListItem>
-                        </div>
+                        {chat?.map((message, i) => {
+                            return message.userId === userId ? (
+                                <div key={i} style={ourMessages}>
+                                    <ListItem sx={outStyling}>
+                                        <ListItemText
+                                            sx={{ width: 'auto' }}
+                                            primary={message.message}
+                                        />
+                                    </ListItem>
+                                </div>
+                            ) : (
+                                <div key={i} style={theirMessages}>
+                                    <ListItem sx={theirStyling}>
+                                        <ListItemText
+                                            sx={{ width: '100%' }}
+                                            primary={message.message}
+                                        />
+                                    </ListItem>
+                                </div>
+                            );
+                        })}
                     </List>
                 </FlexBetween>
                 <FlexBetween position='fixed' bottom='0' mb='1rem'>
@@ -184,12 +196,17 @@ const MessageWidget = ({ friend }) => {
                         gap='1rem'
                         padding='0.1rem 0.3rem 0.1rem 0.5rem'
                     >
-                        <InputBase placeholder='Aa' />
+                        <InputBase
+                            placeholder='Aa'
+                            onChange={(e) => {
+                                setInput(e.target.value);
+                            }}
+                        />
                         <IconButton>
                             <EmojiEmotionsIcon />
                         </IconButton>
                     </FlexBetween>
-                    <IconButton sx={{ ml: '0.3rem' }}>
+                    <IconButton onClick={() => messageFriend()} sx={{ ml: '0.3rem' }}>
                         <SendIcon />
                     </IconButton>
                 </FlexBetween>

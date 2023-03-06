@@ -37,19 +37,24 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     };
 
     const getFriend = async () => {
-        const res = await fetch(`http://localhost:8000/api/users/id`, {
+        const res = await fetch(`http://localhost:8000/api/users/id/messages`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                userId: id,
                 friendId: friendId,
             }),
         });
 
         let json = await res.json();
-        dispatch(setChatWithFriend(json));
+        let { friend, messages } = json;
+        let msg = messages.chat;
+        msg = JSON.parse(msg);
+        msg.length < 1 && (msg = null);
+        dispatch(setChatWithFriend({ friend: friend, messages: msg }));
     };
 
     return (

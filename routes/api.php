@@ -13,13 +13,14 @@ Route::post('/signup', [Auth::class, 'signup']);
 
 
 // User Routes
-Route::post('/users/id', [Users::class, 'getUser']);
+Route::post('/users/id/messages', [Users::class, 'messagesWithFriend']);
+Route::post('/users/message/friend', [Users::class, 'messageFriend']);
 Route::get('/users/{userId}', [Users::class, 'getUserProfile']);
 Route::get('/users/{userId}/friends', [Users::class, 'getUserFriends']);
 Route::patch('/users/{id}/{friendId}', [Users::class, 'addOrRemoveFriend']);
 
 
-// Posts Routes
+// Post Routes
 Route::get('/posts', [Posts::class, 'getAllPosts']);
 Route::post('/posts', [Posts::class, 'makePost']);
 Route::post('/posts/{postId}/delete', [Posts::class, 'deletePost']);

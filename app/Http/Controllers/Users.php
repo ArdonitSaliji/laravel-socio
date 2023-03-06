@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\user;
+use App\Models\message;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Carbon;
 class Users extends Controller
 {
     public function getUserProfile($userId) {
@@ -54,11 +55,44 @@ class Users extends Controller
         return response()->json($userFriends);
     }
 
-    public function getUser(Request $req) {
+    public function messagesWithFriend(Request $req) {
+        $friend = user::where('id', $req->friendId)->first();
+
+        $messages = message::where('userId', $req->userId)->where('friendId', $req->friendId)->first();
+
+        if ($messages) {
+            return response()->json(['friend' => $friend, 'messages' => $messages]);
+        }
+
+        $post = [
+            'userId' => $req->userId,
+            'friendId' => $req->friendId,
+            'chat' => '[]',
+            'created_at' => Carbon::now()->timestamp,
+            'updated_at' => Carbon::now()->timestamp
+        ];
+        
+        $newMessage = new message;
+        $newMessage->fill($post);
+        $newMessage->save();
+        
+        return response()->json(['friend' => $friend, 'messages' => $newMessage]);
+    }
+
+    public function messageFriend(Request $req) {
+        $userId = $req->userId;
         $friendId = $req->friendId;
+        $input = $req->input;
+        
+        $chat = message::where('userId', $userId)->where('friendId', $friendId)->first();
+        $chat->chat = json_decode($chat->chat, true);
+        $chatMessages = $chat->chat;
+         
+        array_push($chatMessages, ['userId' => $userId, 'message' => $input]);
+        $chat->chat = $chatMessages;
+        $chat->save();
+        
 
-        $friend = user::where('id', $friendId)->first();
-
-        return response()->json($friend);
+        return response()->json($chat->chat);
     }
 }
