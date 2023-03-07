@@ -13,6 +13,13 @@ class Posts extends Controller
         $allPosts = post::all();
         return response()->json($allPosts, 200);
     }
+
+    public function getUserPosts(Request $req, ) {
+        $userPosts = post::where('userId', $req->userId)->get();
+
+        return response()->json($userPosts);
+    }
+
     public function makePost(Request $request) {
         $user = user::where('id', $request->userId)->first();
         $post = [

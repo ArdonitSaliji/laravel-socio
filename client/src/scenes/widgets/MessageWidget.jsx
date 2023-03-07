@@ -13,14 +13,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setChatWithFriend, updateChatWithFriend } from 'state';
 
 const MessageWidget = ({ friend }) => {
+    const [input, setInput] = useState(null);
     const { palette } = useTheme();
     const { picturePath, firstName, lastName, location } = friend.friend;
     const friendId = friend.friend.id;
     const userId = useSelector((state) => state.user.id);
     const chat = friend.messages;
-
     const dispatch = useDispatch();
-    const [input, setInput] = useState(null);
 
     const styles = {
         position: 'fixed',
@@ -65,16 +64,19 @@ const MessageWidget = ({ friend }) => {
     };
 
     const messageFriend = async () => {
-        const response = await fetch('http://localhost:8000/api/users/message/friend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId, friendId, input }),
-        });
+        let message = input.trim();
+        if (message.length > 0) {
+            const response = await fetch('http://localhost:8000/api/users/message/friend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, friendId, message }),
+            });
 
-        let json = await response.json();
-        dispatch(updateChatWithFriend(json));
+            let json = await response.json();
+            dispatch(updateChatWithFriend(json));
+        }
     };
 
     return (
@@ -206,7 +208,12 @@ const MessageWidget = ({ friend }) => {
                             <EmojiEmotionsIcon />
                         </IconButton>
                     </FlexBetween>
-                    <IconButton onClick={() => messageFriend()} sx={{ ml: '0.3rem' }}>
+                    <IconButton
+                        onClick={() => {
+                            messageFriend();
+                        }}
+                        sx={{ ml: '0.3rem' }}
+                    >
                         <SendIcon />
                     </IconButton>
                 </FlexBetween>

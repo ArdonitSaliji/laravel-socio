@@ -58,10 +58,14 @@ class Users extends Controller
     public function messagesWithFriend(Request $req) {
         $friend = user::where('id', $req->friendId)->first();
 
-        $messages = message::where('userId', $req->userId)->where('friendId', $req->friendId)->first();
+        $userMessages = message::where('userId', $req->userId)->where('friendId', $req->friendId)->first();
+        $friendMessages = message::where('userId', $req->friendId)->where('friendId', $req->userId)->first();
 
-        if ($messages) {
-            return response()->json(['friend' => $friend, 'messages' => $messages]);
+        if ($userMessages) {
+            return response()->json(['friend' => $friend, 'messages' => $userMessages]);
+        }
+        if($friendMessages) {
+            return response()->json(['friend' => $friend, 'messages' => $friendMessages]);
         }
 
         $post = [
@@ -82,17 +86,27 @@ class Users extends Controller
     public function messageFriend(Request $req) {
         $userId = $req->userId;
         $friendId = $req->friendId;
-        $input = $req->input;
+        $input = $req->message;
         
         $chat = message::where('userId', $userId)->where('friendId', $friendId)->first();
-        $chat->chat = json_decode($chat->chat, true);
-        $chatMessages = $chat->chat;
-         
-        array_push($chatMessages, ['userId' => $userId, 'message' => $input]);
-        $chat->chat = $chatMessages;
-        $chat->save();
-        
+        $friendChat = message::where('userId', $friendId)->where('friendId', $userId)->first();
 
-        return response()->json($chat->chat);
+        if ($chat) {
+            $chat->chat = json_decode($chat->chat, true);
+            $chatMessages = $chat->chat;
+            array_push($chatMessages, ['userId' => $userId, 'message' => $input]);
+            $chat->chat = $chatMessages;
+            $chat->save();
+            return response()->json($chat->chat);
+            
+        } else {
+            $friendChat->chat = json_decode($friendChat->chat, true);
+            $friendChatMessages =  $friendChat->chat;
+            array_push($friendChatMessages, ['userId' => $userId, 'message' => $input]);
+            $friendChat->chat = $friendChatMessages;
+            $friendChat->save();
+            return response()->json($friendChat->chat);
+
+        }
     }
 }

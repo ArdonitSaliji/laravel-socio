@@ -25,6 +25,7 @@ const ProfilePage = () => {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
+
         if (data.id === loggedInUser.id) {
             dispatch(setIsProfile(true));
         }
@@ -50,6 +51,7 @@ const ProfilePage = () => {
                 <Box position='relative' flexBasis={isNonMobileScreens ? '26%' : undefined}>
                     <UserWidget
                         values={{ mt: '5rem', width: '27.5rem' }}
+                        user={user}
                         userId={userId}
                         picturePath={user.picturePath}
                     />

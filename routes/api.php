@@ -22,5 +22,6 @@ Route::patch('/users/{id}/{friendId}', [Users::class, 'addOrRemoveFriend']);
 
 // Post Routes
 Route::get('/posts', [Posts::class, 'getAllPosts']);
+Route::get('/posts/{userId}/posts', [Posts::class, 'getUserPosts']);
 Route::post('/posts', [Posts::class, 'makePost']);
 Route::post('/posts/{postId}/delete', [Posts::class, 'deletePost']);
