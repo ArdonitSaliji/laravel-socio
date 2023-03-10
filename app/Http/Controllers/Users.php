@@ -8,6 +8,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 class Users extends Controller
 {
+
+    public function findUsers(Request $request) {
+        try {
+            if ($request->input('search')) {
+                $nameParts = explode(' ', $request->input('search'));
+                $firstName = $nameParts[0];
+                $lastName = isset($nameParts[1]) ? $nameParts[1] : null;
+        
+                $query = user::query();
+                if (count($nameParts) == 1) {
+                    $query->where('firstName', 'like', $firstName . '%');
+                } else if (count($nameParts) == 2) {
+                    $query->where('firstName', 'like', $firstName . '%')
+                        ->where('lastName', 'like', $lastName . '%');
+                }
+        
+                $users = $query->get();
+                return response()->json($users);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
+    }
     public function getUserProfile($userId) {
         $findUser = user::where('id', $userId)->first();
         if($findUser) {

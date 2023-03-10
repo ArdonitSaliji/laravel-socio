@@ -27,7 +27,7 @@ function SearchResults(props) {
                 {users.length > 0 &&
                     users?.map((user) => (
                         <ListItemButton
-                            href={'/profile/' + user._id}
+                            href={'/profile/' + user.id}
                             sx={{ height: '4rem' }}
                             key={user._id}
                         >

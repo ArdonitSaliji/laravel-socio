@@ -13,6 +13,7 @@ Route::post('/signup', [Auth::class, 'signup']);
 
 
 // User Routes
+Route::post('/users/find', [Users::class, 'findUsers']);
 Route::post('/users/id/messages', [Users::class, 'messagesWithFriend']);
 Route::post('/users/message/friend', [Users::class, 'messageFriend']);
 Route::get('/users/{userId}', [Users::class, 'getUserProfile']);

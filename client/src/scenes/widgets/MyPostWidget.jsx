@@ -65,7 +65,7 @@ const MyPostWidget = ({ picturePath }) => {
     };
 
     return (
-        <WidgetWrapper mt='5rem'>
+        <WidgetWrapper>
             <FlexBetween gap='1.5rem'>
                 <UserImage image={picturePath} />
                 <InputBase
@@ -80,6 +80,7 @@ const MyPostWidget = ({ picturePath }) => {
                     }}
                 />
             </FlexBetween>
+
             {isImage && (
                 <Box border={`1px solid ${medium}`} borderRadius='5px' mt='1rem' p='1rem'>
                     <Dropzone

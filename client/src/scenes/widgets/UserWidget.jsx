@@ -4,7 +4,7 @@ import {
     LocationOnOutlined,
     WorkOutlineOutlined,
 } from '@mui/icons-material';
-import { Box, Typography, Divider, useTheme, IconButton } from '@mui/material';
+import { Box, Typography, Divider, useTheme, IconButton, useMediaQuery } from '@mui/material';
 import UserImage from 'components/UserImage';
 import FlexBetween from 'components/FlexBetween';
 import WidgetWrapper from 'components/WidgetWrapper';
@@ -14,13 +14,18 @@ import { useNavigate } from 'react-router-dom';
 
 const UserWidget = ({ userId, picturePath, values }) => {
     const [user, setUser] = useState(null);
-
     const { palette } = useTheme();
     const navigate = useNavigate();
     const token = useSelector((state) => state.token);
     const dark = palette.neutral.dark;
     const medium = palette.neutral.medium;
     const main = palette.neutral.main;
+    const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
+
+    const userWidgetStyle = {
+        marginBottom: '0',
+        mt: '5rem',
+    };
 
     const getUser = async () => {
         const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
@@ -41,7 +46,7 @@ const UserWidget = ({ userId, picturePath, values }) => {
     const { firstName, lastName, location, occupation, viewedProfile, impressions, friends } = user;
 
     return (
-        <WidgetWrapper sx={values}>
+        <WidgetWrapper sx={isNonMobileScreens ? values : userWidgetStyle}>
             {/* FIRST ROW */}
             <FlexBetween gap='0.5rem' pb='1.1rem' onClick={() => navigate(`/profile/${userId}`)}>
                 <FlexBetween gap='1rem'>
@@ -69,7 +74,7 @@ const UserWidget = ({ userId, picturePath, values }) => {
             </FlexBetween>
 
             <Divider />
-
+            {/*  */}
             {/* SECOND ROW */}
             <Box p='1rem 0'>
                 <Box display='flex' alignItems='center' gap='1rem' mb='0.5rem'>

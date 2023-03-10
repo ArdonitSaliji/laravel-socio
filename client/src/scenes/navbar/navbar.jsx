@@ -49,7 +49,7 @@ const Navbar = () => {
 
     const handleSearch = async (e) => {
         if (e.target.value) {
-            const response = await fetch(`http://localhost:3001/users/find`, {
+            const response = await fetch(`http://localhost:8000/api/users/find`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
