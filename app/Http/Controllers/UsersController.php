@@ -6,7 +6,7 @@ use App\Models\user;
 use App\Models\message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-class Users extends Controller
+class UsersController extends Controller
 {
 
     public function findUsers(Request $request) {

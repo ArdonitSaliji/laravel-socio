@@ -7,7 +7,7 @@ use App\Models\user;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class Posts extends Controller
+class PostsController extends Controller
 {
     public function getAllPosts() {
         $allPosts = post::all();

@@ -60,7 +60,7 @@ const Form = () => {
             ? formData.append('picturePath', values.picture.name)
             : formData.append('picturePath', 'null');
 
-        const savedUserResponse = await fetch('http://localhost:8000/api/signup', {
+        const savedUserResponse = await fetch('http://localhost:8000/signup', {
             method: 'POST',
             body: formData,
         });
@@ -79,7 +79,7 @@ const Form = () => {
     };
 
     const login = async (values, onSubmitProps) => {
-        const loggedInResponse = await fetch('http://localhost:8000/api/login', {
+        const loggedInResponse = await fetch('http://localhost:8000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values),
@@ -98,7 +98,7 @@ const Form = () => {
                 })
             );
             navigate('/home');
-        } else if (loggedIn.status === 403) {
+        } else if (loggedIn.status === 401) {
             toast.error('Invalid credentials!');
         }
     };
@@ -237,7 +237,6 @@ const Form = () => {
                             sx={{ gridColumn: 'span 4' }}
                         />
                     </Box>
-
                     {/* BUTTONS */}
                     <Box>
                         <Button

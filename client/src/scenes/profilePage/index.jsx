@@ -1,4 +1,3 @@
-import { MoreHoriz } from '@mui/icons-material';
 import { Box, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +19,7 @@ const ProfilePage = () => {
     const loggedInUser = useSelector((state) => state.user);
 
     const getUser = async () => {
-        const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8000/users/${userId}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });

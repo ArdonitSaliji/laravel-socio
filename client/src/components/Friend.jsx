@@ -25,7 +25,7 @@ const Friend = ({ userId, friendId, name, subtitle, userPicturePath }) => {
         friends && friends.length > 0 && friends?.find((friend) => friend.id === friendId);
 
     const patchFriend = async () => {
-        const res = await fetch(`http://localhost:8000/api/users/${id}/${friendId}`, {
+        const res = await fetch(`http://localhost:8000/users/${id}/${friendId}`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ const Friend = ({ userId, friendId, name, subtitle, userPicturePath }) => {
     };
 
     const getFriend = async () => {
-        const res = await fetch(`http://localhost:8000/api/users/id/messages`, {
+        const res = await fetch(`http://localhost:8000/users/id/messages`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,

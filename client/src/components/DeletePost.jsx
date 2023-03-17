@@ -8,7 +8,7 @@ const DeletePost = ({ postId, deletePopup, setDeletePopup, setPosts }) => {
     const dispatch = useDispatch();
     const { id } = useSelector((state) => state.user);
     const deletePost = async () => {
-        const response = await fetch(`http://localhost:8000/api/posts/${postId}/delete`, {
+        const response = await fetch(`http://localhost:8000/posts/${postId}/delete`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,

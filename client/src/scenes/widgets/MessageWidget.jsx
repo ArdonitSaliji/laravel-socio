@@ -66,7 +66,7 @@ const MessageWidget = ({ friend }) => {
     const messageFriend = async () => {
         let message = input.trim();
         if (message.length > 0) {
-            const response = await fetch('http://localhost:8000/api/users/message/friend', {
+            const response = await fetch('http://localhost:8000/users/message/friend', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

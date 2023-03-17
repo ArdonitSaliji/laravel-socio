@@ -12,7 +12,7 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
     // ! 'POSTS' Widget
 
     const getPosts = async () => {
-        const response = await fetch('http://localhost:8000/api/posts', {
+        const response = await fetch('http://localhost:8000/posts', {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -27,7 +27,7 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
     };
 
     const getUserPosts = async () => {
-        const response = await fetch(`http://localhost:8000/api/posts/${userId}/posts`, {
+        const response = await fetch(`http://localhost:8000/posts/${userId}/posts`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });

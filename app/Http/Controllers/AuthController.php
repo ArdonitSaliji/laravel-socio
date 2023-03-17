@@ -6,15 +6,15 @@ use App\Models\user;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class Auth extends Controller
+class AuthController extends Controller
 {
     public function login(Request $request) {
-        $input = $request->all();
         $auth = user::where('email', $request->email)->where('password', $request->password)->first();
         if ($auth) {
-            return response()->json(['user' => $auth, 'token' => 1234, 'status' => 200]);
-        }
-        return response()->json(['message' => 'Error 403', 'status' => 403], 403);
+            return response()->json(['user' => $auth, 'token' => 1234, 'status' => 200], 200);
+        } 
+        
+        return response()->json(['message' => 'Error 403', 'status' => 401, $auth], 401);
     }
 
     public function signup(Request $request) {

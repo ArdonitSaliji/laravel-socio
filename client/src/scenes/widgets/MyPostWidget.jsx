@@ -46,7 +46,7 @@ const MyPostWidget = ({ picturePath }) => {
             formData.append('picturePath', image.name);
         }
 
-        const response = await fetch(`http://localhost:8000/api/posts`, {
+        const response = await fetch(`http://localhost:8000/posts`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
             body: formData,
@@ -65,7 +65,7 @@ const MyPostWidget = ({ picturePath }) => {
     };
 
     return (
-        <WidgetWrapper>
+        <WidgetWrapper mt={isNonMobileScreens ? '5rem' : '0'}>
             <FlexBetween gap='1.5rem'>
                 <UserImage image={picturePath} />
                 <InputBase
@@ -80,7 +80,6 @@ const MyPostWidget = ({ picturePath }) => {
                     }}
                 />
             </FlexBetween>
-
             {isImage && (
                 <Box border={`1px solid ${medium}`} borderRadius='5px' mt='1rem' p='1rem'>
                     <Dropzone
