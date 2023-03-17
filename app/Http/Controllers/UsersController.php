@@ -69,6 +69,7 @@ class UsersController extends Controller
             $userFriends[] = $friendId;
             $friendFriends[] = $id;
         }
+        
         $user->friends = json_encode($userFriends);
         $friend->friends = json_encode($friendFriends);
         $user->save();
@@ -87,6 +88,7 @@ class UsersController extends Controller
         if ($userMessages) {
             return response()->json(['friend' => $friend, 'messages' => $userMessages]);
         }
+        
         if($friendMessages) {
             return response()->json(['friend' => $friend, 'messages' => $friendMessages]);
         }
@@ -123,6 +125,7 @@ class UsersController extends Controller
             return response()->json($chat->chat);
             
         } else {
+            
             $friendChat->chat = json_decode($friendChat->chat, true);
             $friendChatMessages =  $friendChat->chat;
             array_push($friendChatMessages, ['userId' => $userId, 'message' => $input]);

@@ -18,8 +18,6 @@ class AuthController extends Controller
     }
 
     public function signup(Request $request) {
-        $all = $request->all();
-        $email = $request->email;
         $userExists = user::where('email', $request->email)->first();
         if ($userExists) {
             return response()->json(['message' =>'Email already exists!', 'status' => 409], 409);
