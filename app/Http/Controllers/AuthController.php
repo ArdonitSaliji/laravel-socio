@@ -11,17 +11,19 @@ class AuthController extends Controller
     public function login(Request $request) {
         $auth = user::where('email', $request->email)->where('password', $request->password)->first();
         if ($auth) {
-            return response()->json(['user' => $auth, 'token' => 1234, 'status' => 200], 200);
+            return response()->json(['user' => $auth, 'token' => 1234], 200);
         } 
         
-        return response()->json(['message' => 'Error 403', 'status' => 401, $auth], 401);
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 
     public function signup(Request $request) {
         $userExists = user::where('email', $request->email)->first();
+        
         if ($userExists) {
-            return response()->json(['message' =>'Email already exists!', 'status' => 409], 409);
+            return response()->json(['message' =>'Email already exists!'], 409);
         }
+        
         $user = [
             'email' => $request->email,
             'password' => $request->password,
@@ -38,6 +40,6 @@ class AuthController extends Controller
         $newUser->fill($user);
         $newUser->save(); 
         
-        return response()->json(['message' => $newUser, 'status' => 201], 201);;
+        return response()->json(['message' => $newUser], 201);;
     }
 }

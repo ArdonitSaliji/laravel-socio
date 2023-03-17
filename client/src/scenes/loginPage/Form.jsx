@@ -64,43 +64,46 @@ const Form = () => {
             method: 'POST',
             body: formData,
         });
-        const savedUser = await savedUserResponse.json();
 
-        if (savedUser.status === 409) {
+        if (!savedUserResponse.ok) {
             toast.error('Email already exists!');
         } else {
             toast.success('Signup successful!');
             onSubmitProps.resetForm();
-        }
-
-        if (savedUser.status !== 409) {
             setPageType('login');
         }
     };
 
     const login = async (values, onSubmitProps) => {
-        const loggedInResponse = await fetch('http://localhost:8000/login', {
+        await fetch('http://localhost:8000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values),
-        });
+        })
+            .then((req) => {
+                if (!req.ok) {
+                    toast.error('Invalid credentials!');
+                    throw Error('Unauthorized');
+                } else {
+                    toast.success('Login successful!');
+                }
 
-        const loggedIn = await loggedInResponse.json();
-        loggedIn.user && (loggedIn.user.friends = JSON.parse(loggedIn.user.friends));
-
-        if (loggedIn.status === 200) {
-            onSubmitProps.resetForm();
-            toast.success('Login successful!');
-            dispatch(
-                setLogin({
-                    user: loggedIn.user,
-                    token: loggedIn.token,
-                })
-            );
-            navigate('/home');
-        } else if (loggedIn.status === 401) {
-            toast.error('Invalid credentials!');
-        }
+                return req.json();
+            })
+            .then((res) => {
+                res.user && (res.user.friends = JSON.parse(res.user.friends));
+                onSubmitProps.resetForm();
+                dispatch(
+                    setLogin({
+                        user: res.user,
+                        token: res.token,
+                    })
+                );
+                navigate('/home');
+            })
+            .catch((err) => {
+                // console.log(err);
+            });
     };
 
     const handleFormSubmit = async (values, onSubmitProps) => {

@@ -16,7 +16,6 @@ class PostsController extends Controller
 
     public function getUserPosts(Request $req, ) {
         $userPosts = post::where('userId', $req->userId)->get();
-
         return response()->json($userPosts);
     }
 
