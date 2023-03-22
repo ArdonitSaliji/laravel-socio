@@ -12,8 +12,6 @@
 */
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Models\user;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\UsersController;

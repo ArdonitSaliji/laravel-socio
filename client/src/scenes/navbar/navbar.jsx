@@ -45,11 +45,11 @@ const Navbar = () => {
     const alt = theme.palette.background.alt;
 
     const fullName = `${user.firstName} ${user.lastName}`;
-    const token = useSelector((state) => state.token);
+    // const token = useSelector((state) => state.token);
 
     const handleSearch = async (e) => {
         if (e.target.value) {
-            const response = await fetch(`http://localhost:8000/api/users/find`, {
+            const response = await fetch(`http://localhost:8000/users/find`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -65,6 +65,7 @@ const Navbar = () => {
 
     useEffect(() => {
         dispatch(setSearchUsers(''));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
