@@ -21,14 +21,14 @@ export default function EditPost(props) {
 
     const [image, setImage] = useState(null);
     const [showImage, setShowImage] = useState(true);
-    const [postDesc, setPostDesc] = useState(post.description);
+    const [postDesc, setPostDesc] = useState(post?.description);
 
-    const { id } = useSelector((state) => state.user);
+    const { userId } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
 
     const handlePost = async () => {
         const formData = new FormData();
-        formData.append('postId', post.id);
+        formData.append('postId', post.userId);
         formData.append('description', postDesc || post.description);
         if (image) {
             formData.append('picture', image);

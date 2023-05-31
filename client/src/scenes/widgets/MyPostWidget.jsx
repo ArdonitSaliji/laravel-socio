@@ -31,7 +31,7 @@ const MyPostWidget = ({ picturePath }) => {
     const [image, setImage] = useState(null);
     const [post, setPost] = useState('');
     const { palette } = useTheme();
-    const { id } = useSelector((state) => state.user);
+    const { userId } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
     const mediumMain = palette.neutral.mediumMain;
@@ -39,7 +39,7 @@ const MyPostWidget = ({ picturePath }) => {
 
     const handlePost = async () => {
         const formData = new FormData();
-        formData.append('userId', id);
+        formData.append('userId', userId);
         formData.append('description', post);
         if (image) {
             formData.append('picture', image);
@@ -56,7 +56,7 @@ const MyPostWidget = ({ picturePath }) => {
         if (window.location.pathname === '/home') {
             dispatch(setPosts({ posts: data }));
         } else {
-            const userPosts = data.filter((x) => x.userId === id && x);
+            const userPosts = data.filter((x) => x.userId === userId && x);
             dispatch(setPosts({ posts: userPosts }));
         }
 

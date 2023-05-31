@@ -16,8 +16,8 @@ const MessageWidget = ({ friend }) => {
     const [input, setInput] = useState(null);
     const { palette } = useTheme();
     const { picturePath, firstName, lastName, location } = friend.friend;
-    const friendId = friend.friend.id;
-    const userId = useSelector((state) => state.user.id);
+    const friendId = friend.friend.userId;
+    const userId = useSelector((state) => state.user.userId);
     const chat = friend.messages;
     const dispatch = useDispatch();
 
@@ -31,17 +31,22 @@ const MessageWidget = ({ friend }) => {
         padding: '0.5rem 0 0.75rem 0rem',
     };
 
-    let outStyling = {
+    let ourStyling = {
+        display: 'flex',
+        justifyContent: 'center',
         padding: '0.25rem 0.7rem',
         backgroundColor: '#00353F !important',
         textAlign: 'right',
         borderRadius: '15px',
         margin: '3px 0',
-        width: 'fit-content',
         maxWidth: '60%',
+        width: 'fit-content',
+        flexWrap: 'wrap',
+        wordWrap: 'break-word',
     };
 
     let theirStyling = {
+        display: 'flex',
         padding: '0.25rem 0.7rem',
         backgroundColor: '#3e4042 !important',
         textAlign: 'left',
@@ -49,6 +54,8 @@ const MessageWidget = ({ friend }) => {
         margin: '3px 0',
         width: 'fit-content',
         maxWidth: '60%',
+        flexWrap: 'wrap',
+        wordWrap: 'break-word',
     };
 
     let theirMessages = {
@@ -160,20 +167,35 @@ const MessageWidget = ({ friend }) => {
                         {chat?.map((message, i) => {
                             return message.userId === userId ? (
                                 <div key={i} style={ourMessages}>
-                                    <ListItem sx={outStyling}>
-                                        <ListItemText
-                                            sx={{ width: 'auto' }}
-                                            primary={message.message}
-                                        />
+                                    <ListItem sx={ourStyling}>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                width: '100% ',
+                                            }}
+                                        >
+                                            <p
+                                                style={{
+                                                    width: '100%',
+                                                    wordWrap: 'break-word',
+                                                }}
+                                            >
+                                                {message.message}
+                                            </p>
+                                        </div>
                                     </ListItem>
                                 </div>
                             ) : (
                                 <div key={i} style={theirMessages}>
                                     <ListItem sx={theirStyling}>
-                                        <ListItemText
-                                            sx={{ width: '100%' }}
-                                            primary={message.message}
-                                        />
+                                        <div
+                                            variant='h6'
+                                            component='h5'
+                                            sx={{ overflowWrap: 'break-word' }}
+                                        >
+                                            {message.message}
+                                        </div>
                                     </ListItem>
                                 </div>
                             );

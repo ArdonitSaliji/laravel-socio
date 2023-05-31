@@ -18,11 +18,6 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
         });
         const data = await response.json();
 
-        data.forEach((data) => {
-            data.comments = JSON.parse(data.comments);
-            data.likes = JSON.parse(data.likes);
-        });
-
         dispatch(setPosts({ posts: data }));
     };
 
@@ -48,7 +43,7 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
         <>
             {posts?.map(
                 ({
-                    id,
+                    postId,
                     userId,
                     firstName,
                     lastName,
@@ -56,38 +51,19 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
                     location,
                     picturePath,
                     userPicturePath,
-                    likes,
-                    comments,
-                }) =>
-                    userId === loggedInUser.id ? (
-                        <PostWidget
-                            key={id}
-                            postId={id}
-                            postUserId={userId}
-                            name={`${firstName} ${lastName}`}
-                            description={description}
-                            location={location}
-                            picturePath={picturePath}
-                            userPicturePath={userPicturePath}
-                            likes={likes}
-                            comments={comments}
-                            profile={true}
-                        />
-                    ) : (
-                        <PostWidget
-                            key={id}
-                            postId={id}
-                            postUserId={userId}
-                            name={`${firstName} ${lastName}`}
-                            description={description}
-                            location={location}
-                            picturePath={picturePath}
-                            userPicturePath={userPicturePath}
-                            likes={likes}
-                            comments={comments}
-                            profile={false}
-                        />
-                    )
+                }) => (
+                    <PostWidget
+                        key={postId}
+                        postId={postId}
+                        postUserId={userId}
+                        name={`${firstName} ${lastName}`}
+                        description={description}
+                        location={location}
+                        picturePath={picturePath}
+                        userPicturePath={userPicturePath}
+                        profile={userId === loggedInUser.userId ? true : false}
+                    />
+                )
             )}
         </>
     );

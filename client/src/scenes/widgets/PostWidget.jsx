@@ -23,23 +23,21 @@ const PostWidget = ({
     location,
     picturePath,
     userPicturePath,
-    likes,
-    comments,
     profile,
 }) => {
     const [isComments, setIsComments] = useState(false);
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
     const loggedInUserId = useSelector((state) => state.user.id);
-    const isLiked = Boolean(likes[loggedInUserId]);
-    const likeCount = likes && Object.keys(likes).length;
+    // const isLiked = Boolean(likes[loggedInUserId]);
+    // const likeCount = likes && Object.keys(likes).length;
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
-    const { id } = useSelector((state) => state.user);
+    const { userId } = useSelector((state) => state.user);
 
     const patchLike = async () => {
-        const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+        const response = await fetch(`http://localhost:8000/posts/${postId}/like`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -59,7 +57,7 @@ const PostWidget = ({
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId: id,
+                userId: userId,
             }),
         });
 
@@ -105,20 +103,20 @@ const PostWidget = ({
                 <FlexBetween gap='1rem'>
                     <FlexBetween gap='0.3rem'>
                         <IconButton onClick={patchLike}>
-                            {isLiked ? (
+                            {/* {isLiked ? (
                                 <FavoriteOutlined sx={{ color: primary }} />
                             ) : (
                                 <FavoriteBorderOutlined />
-                            )}
+                            )} */}
                         </IconButton>
-                        <Typography>{likeCount}</Typography>
+                        <Typography>{/* {likeCount} */}</Typography>
                     </FlexBetween>
 
                     <FlexBetween gap='0.3rem'>
                         <IconButton onClick={() => setIsComments(!isComments)}>
                             <ChatBubbleOutlineOutlined />
                         </IconButton>
-                        <Typography>{comments && comments.length}</Typography>
+                        <Typography>{/* {comments && comments.length} */}</Typography>
                     </FlexBetween>
                 </FlexBetween>
 
@@ -126,7 +124,7 @@ const PostWidget = ({
                     <ShareOutlined />
                 </IconButton>
             </FlexBetween>
-            {isComments && comments.length > 0 && (
+            {/* {isComments && comments.length > 0 && (
                 <Box mt='0.5rem'>
                     {comments?.map((comment, i) => (
                         <Box key={`${name}-${i}`}>
@@ -138,7 +136,7 @@ const PostWidget = ({
                     ))}
                     <Divider />
                 </Box>
-            )}
+            )} */}
         </WidgetWrapper>
     );
 };

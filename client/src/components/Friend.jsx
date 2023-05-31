@@ -9,10 +9,10 @@ import MessageIcon from '@mui/icons-material/Message';
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 
-const Friend = ({ userId, friendId, name, subtitle, userPicturePath }) => {
+const Friend = ({ loggedInUserId, friendId, name, subtitle, userPicturePath }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { id } = useSelector((state) => state.user);
+    const { userId } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const friends = useSelector((state) => state.user.friends);
 
@@ -21,11 +21,12 @@ const Friend = ({ userId, friendId, name, subtitle, userPicturePath }) => {
     const primaryDark = palette.primary.dark;
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
-    const isFriend =
-        friends && friends.length > 0 && friends?.find((friend) => friend.id === friendId);
+
+    const allFriends =
+        friends && friends.length > 0 && friends.find((friend) => friend.userId === friendId);
 
     const patchFriend = async () => {
-        const res = await fetch(`http://localhost:8000/users/${id}/${friendId}`, {
+        const res = await fetch(`http://localhost:8000/users/${userId}/${friendId}`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -45,7 +46,7 @@ const Friend = ({ userId, friendId, name, subtitle, userPicturePath }) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId: id,
+                userId: userId,
                 friendId: friendId,
             }),
         });
@@ -86,11 +87,9 @@ const Friend = ({ userId, friendId, name, subtitle, userPicturePath }) => {
                     </Typography>
                 </Box>
             </FlexBetween>
-
             {/* Add or remove friend button */}
-
             {!onProfile ? (
-                isFriend ? (
+                allFriends ? (
                     <div>
                         <IconButton
                             onClick={() => patchFriend()}
@@ -114,7 +113,7 @@ const Friend = ({ userId, friendId, name, subtitle, userPicturePath }) => {
                     </IconButton>
                 )
             ) : (
-                userId == id && (
+                loggedInUserId === userId && (
                     <div>
                         <IconButton
                             onClick={() => patchFriend()}

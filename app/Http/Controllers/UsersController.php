@@ -32,7 +32,7 @@ class UsersController extends Controller
         }
     }
     public function getUserProfile($userId) {
-        $findUser = user::where('id', $userId)->first();
+        $findUser = user::where('userId', $userId)->first();
         if($findUser) {
             return response()->json($findUser, 200);  
         } else {
@@ -41,33 +41,37 @@ class UsersController extends Controller
     }
 
     public function getUserFriends($userId) {
-        $findFriends = user::where('id', $userId)->first();
-        $parse = json_decode($findFriends->friends, true);
-        $friends = user::whereIn('id', $parse)->get();
-        return response()->json($friends);
+        $user = user::where('userId', $userId)->first();
+
+        $parse = json_decode($user->friends, true);
+                
+        $userFriends = user::whereIn('userId', $parse)->get();
+        return response()->json($userFriends);
     }
 
-    public function addOrRemoveFriend($id, $friendId) {
-        $user = user::findOrFail($id);
-        $friend = user::findOrFail($friendId);
+    public function addOrRemoveFriend($userId, $friendId) {
+        $user = user::where('userId', $userId)->first();
+        $friend = user::where('userId', $friendId)->first();
+        
         $userFriends = json_decode($user->friends, true);
         $friendFriends = json_decode($friend->friends, true);
         $friendId = intval($friendId);
-        $id = intval($id);
+        $userId = intval($userId);
+        
         
         if (in_array($friendId, $userFriends)) {
             $userFriends = array_filter($userFriends, function($value) use ($friendId) {
                 return $value !== $friendId;
             });
             if($friendFriends) {
-                $friendFriends = array_filter($friendFriends, function($value) use ($id) {
-                return $value !== $id;
+                $friendFriends = array_filter($friendFriends, function($value) use ($userId) {
+                return $value !== $userId;
             });    
             }
         
         } else {
             $userFriends[] = $friendId;
-            $friendFriends[] = $id;
+            $friendFriends[] = $userId;
         }
         
         $user->friends = json_encode($userFriends);
@@ -75,12 +79,12 @@ class UsersController extends Controller
         $user->save();
         $friend->save();
         $user->friends = json_decode($user->friends, true);
-        $userFriends = user::whereIn('id', $user->friends)->get();
+        $userFriends = user::whereIn('userId', $user->friends)->get();
         return response()->json($userFriends);
     }
 
     public function messagesWithFriend(Request $req) {
-        $friend = user::where('id', $req->friendId)->first();
+        $friend = user::where('userId', $req->friendId)->first();
 
         $userMessages = message::where('userId', $req->userId)->where('friendId', $req->friendId)->first();
         $friendMessages = message::where('userId', $req->friendId)->where('friendId', $req->userId)->first();
@@ -124,15 +128,17 @@ class UsersController extends Controller
             $chat->save();
             return response()->json($chat->chat);
             
-        } else {
+        } else if ($friendChat) {
             
             $friendChat->chat = json_decode($friendChat->chat, true);
-            $friendChatMessages =  $friendChat->chat;
+            $friendChatMessages = $friendChat->chat;
             array_push($friendChatMessages, ['userId' => $userId, 'message' => $input]);
             $friendChat->chat = $friendChatMessages;
             $friendChat->save();
             return response()->json($friendChat->chat);
 
+        } else {
+            return abort(400);
         }
     }
 }

@@ -26,9 +26,9 @@ function SearchResults(props) {
                 {users.length > 0 &&
                     users?.map((user) => (
                         <ListItemButton
-                            href={'/profile/' + user.id}
+                            href={'/profile/' + user.userId}
                             sx={{ height: '4rem' }}
-                            key={user._id}
+                            key={user.userId}
                         >
                             <Avatar
                                 src={'http://localhost:8000/assets/' + user.picturePath}

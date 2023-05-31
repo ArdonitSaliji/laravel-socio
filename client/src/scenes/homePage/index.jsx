@@ -11,9 +11,10 @@ import MessageWidget from 'scenes/widgets/MessageWidget';
 const HomePage = () => {
     const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
 
-    const { id, picturePath } = useSelector((state) => {
+    const { userId, picturePath } = useSelector((state) => {
         return state.user;
     });
+
     const friend = useSelector((state) => state.chatWithFriend);
 
     return (
@@ -30,7 +31,7 @@ const HomePage = () => {
                 <Box position='relative' flexBasis={isNonMobileScreens ? '26%' : undefined}>
                     <UserWidget
                         values={{ marginTop: '5rem', position: 'fixed', width: '27.5rem' }}
-                        userId={id}
+                        userId={userId}
                         picturePath={picturePath}
                     />
                 </Box>
@@ -39,13 +40,13 @@ const HomePage = () => {
                     mt={isNonMobileScreens ? undefined : '2rem'}
                 >
                     <MyPostWidget picturePath={picturePath} />
-                    <PostsWidget userId={id} profile={false} />
+                    <PostsWidget userId={userId} profile={false} />
                 </Box>
                 {isNonMobileScreens && (
                     <Box flexBasis='26%'>
                         <AdvertWidget />
                         <Box m='2rem 0' />
-                        <FriendListWidget userId={id} />
+                        <FriendListWidget userId={userId} />
                     </Box>
                 )}
             </Box>

@@ -43,7 +43,7 @@ const UserWidget = ({ userId, picturePath, values }) => {
 
     if (!user) return null;
 
-    const { firstName, lastName, location, occupation, viewedProfile, impressions, friends } = user;
+    const { firstName, lastName, location, occupation, viewedProfile, impressions } = user;
 
     return (
         <WidgetWrapper sx={isNonMobileScreens ? values : userWidgetStyle}>
@@ -65,7 +65,10 @@ const UserWidget = ({ userId, picturePath, values }) => {
                         >
                             {firstName} {lastName}
                         </Typography>
-                        <Typography color={medium}>{friends && friends.length} friends</Typography>
+                        <Typography color={medium}>
+                            {/* {friends && friends.length}  */}
+                            friends
+                        </Typography>
                     </Box>
                 </FlexBetween>
                 <IconButton>

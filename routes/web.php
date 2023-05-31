@@ -34,8 +34,3 @@ Route::get('/posts', [PostsController::class, 'getAllPosts']);
 Route::get('/posts/{userId}/posts', [PostsController::class, 'getUserPosts']);
 Route::post('/posts', [PostsController::class, 'makePost']);
 Route::post('/posts/{postId}/delete', [PostsController::class, 'deletePost']);
-
-
-
-
-// Route::get('/assets/{path}', 'AssetController@serve')->where('path', '(.*)');

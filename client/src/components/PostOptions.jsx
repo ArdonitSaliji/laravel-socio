@@ -88,7 +88,7 @@ const PostOptions = ({ postId, description, friendId, name, subtitle, userPictur
                                 sx={{ height: '2rem' }}
                                 id={postId}
                                 onClick={() => {
-                                    let findPost = posts.find((post) => post.id === postId);
+                                    let findPost = posts.find((post) => post.postId === postId);
                                     setPopup({
                                         ...popup,
                                         post: findPost,

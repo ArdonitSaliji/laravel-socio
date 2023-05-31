@@ -20,7 +20,7 @@ class PostsController extends Controller
     }
 
     public function makePost(Request $request) {
-        $user = user::where('id', $request->userId)->first();
+        $user = user::where('userId', $request->userId)->first();
         $post = [
             'userId' => $request->userId,
             'firstName' => $user->firstName,
@@ -29,8 +29,6 @@ class PostsController extends Controller
             'description' => $request->description,
             'picturePath' => '',
             'userPicturePath' => $user->picturePath,
-            'likes' => '[]',
-            'comments' => '[]',
             'created_at' => Carbon::now()->timestamp,
             'updated_at' =>  Carbon::now()->timestamp,
         ];
@@ -55,13 +53,15 @@ class PostsController extends Controller
         $allPosts = post::all();
         return response()->json($allPosts);
     }
+    
     public function deletePost($postId) {
         
-        $file = post::where('id', $postId)->first();
+        $file = post::where('postId', $postId)->first();
         if ($file->picturePath) {
             unlink(public_path('assets/' . $file->picturePath));
         }
-        post::where('id', $postId)->delete();
+
+        post::where('postId', $postId)->delete();
         $allPosts = post::all();
     
         return response()->json($allPosts);

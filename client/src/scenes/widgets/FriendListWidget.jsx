@@ -10,6 +10,7 @@ const FriendListWidget = ({ userId, value }) => {
     const { palette } = useTheme();
     const token = useSelector((state) => state.token);
     const friends = useSelector((state) => state.user.friends);
+    const friendsExist = friends && friends.length > 0;
     const getFriends = async () => {
         const response = await fetch(`http://localhost:8000/users/${userId}/friends`, {
             method: 'GET',
@@ -34,13 +35,12 @@ const FriendListWidget = ({ userId, value }) => {
                 Friend List
             </Typography>
             <Box display='flex' flexDirection='column' gap='1.5rem'>
-                {friends &&
-                    friends.length > 0 &&
+                {friendsExist &&
                     friends?.map((friend) => (
                         <Friend
-                            key={friend.id}
-                            userId={userId}
-                            friendId={friend.id}
+                            key={friend.userId}
+                            loggedInUserId={userId}
+                            friendId={friend.userId}
                             name={`${friend.firstName} ${friend.lastName}`}
                             subtitle={friend.occupation}
                             userPicturePath={friend.picturePath}
