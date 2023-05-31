@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import WidgetWrapper from 'components/WidgetWrapper';
 import FlexBetween from 'components/FlexBetween';
 import UserImage from 'components/UserImage';
@@ -31,12 +31,11 @@ const MessageWidget = ({ friend }) => {
         padding: '0.5rem 0 0.75rem 0rem',
     };
 
-    let ourStyling = {
+    let messageStyling = {
         display: 'flex',
         justifyContent: 'center',
         padding: '0.25rem 0.7rem',
         backgroundColor: '#00353F !important',
-        textAlign: 'right',
         borderRadius: '15px',
         margin: '3px 0',
         maxWidth: '60%',
@@ -45,29 +44,9 @@ const MessageWidget = ({ friend }) => {
         wordWrap: 'break-word',
     };
 
-    let theirStyling = {
-        display: 'flex',
-        padding: '0.25rem 0.7rem',
-        backgroundColor: '#3e4042 !important',
-        textAlign: 'left',
-        borderRadius: '15px',
-        margin: '3px 0',
-        width: 'fit-content',
-        maxWidth: '60%',
-        flexWrap: 'wrap',
-        wordWrap: 'break-word',
-    };
-
-    let theirMessages = {
+    let messageContainerStyling = {
         width: '100%',
         display: 'flex',
-        justifyContent: 'left',
-    };
-
-    let ourMessages = {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'right',
     };
 
     const messageFriend = async () => {
@@ -164,42 +143,44 @@ const MessageWidget = ({ friend }) => {
                             alignItems: 'flex-end',
                         }}
                     >
-                        {chat?.map((message, i) => {
-                            return message.userId === userId ? (
-                                <div key={i} style={ourMessages}>
-                                    <ListItem sx={ourStyling}>
-                                        <div
+                        {chat?.map((message, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    ...messageContainerStyling,
+                                    justifyContent: message?.userId === userId ? 'right' : 'left',
+                                }}
+                            >
+                                <ListItem
+                                    sx={{
+                                        ...messageStyling,
+                                        textAlign: message?.userId === userId ? 'right' : 'left',
+                                        backgroundColor:
+                                            message?.userId === userId
+                                                ? '#00353F !important'
+                                                : '#3e4042 !important',
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            width: '100% ',
+                                        }}
+                                    >
+                                        <p
                                             style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                width: '100% ',
+                                                margin: '0.2rem 0',
+                                                width: '100%',
+                                                wordWrap: 'break-word',
                                             }}
                                         >
-                                            <p
-                                                style={{
-                                                    width: '100%',
-                                                    wordWrap: 'break-word',
-                                                }}
-                                            >
-                                                {message.message}
-                                            </p>
-                                        </div>
-                                    </ListItem>
-                                </div>
-                            ) : (
-                                <div key={i} style={theirMessages}>
-                                    <ListItem sx={theirStyling}>
-                                        <div
-                                            variant='h6'
-                                            component='h5'
-                                            sx={{ overflowWrap: 'break-word' }}
-                                        >
                                             {message.message}
-                                        </div>
-                                    </ListItem>
-                                </div>
-                            );
-                        })}
+                                        </p>
+                                    </div>
+                                </ListItem>
+                            </div>
+                        ))}
                     </List>
                 </FlexBetween>
                 <FlexBetween position='fixed' bottom='0' mb='1rem'>
@@ -222,6 +203,7 @@ const MessageWidget = ({ friend }) => {
                     >
                         <InputBase
                             placeholder='Aa'
+                            value={input}
                             onChange={(e) => {
                                 setInput(e.target.value);
                             }}
@@ -233,6 +215,7 @@ const MessageWidget = ({ friend }) => {
                     <IconButton
                         onClick={() => {
                             messageFriend();
+                            setInput('');
                         }}
                         sx={{ ml: '0.3rem' }}
                     >

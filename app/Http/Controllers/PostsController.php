@@ -2,25 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\post;
-use App\Models\user;
+use App\Models\Post;
+use App\Models\User;
+use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PostsController extends Controller
 {
-    public function getAllPosts() {
-        $allPosts = post::all();
-        return response()->json($allPosts, 200);
+    public function getAllPosts($userId) {
+        $user = User::find($userId);
+        $posts = Post::with(['likes' => function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        }])->withCount('likes')->get();
+
+        $posts = $posts->map(function ($post) {
+            $post->likedByCurrentUser = $post->likes->isNotEmpty();
+            return $post;
+        });
+
+        return response()->json($posts, 200);
     }
 
-    public function getUserPosts(Request $req, ) {
-        $userPosts = post::where('userId', $req->userId)->get();
+
+    public function getUserPosts(Request $req) {
+        $userPosts = Post::where('userId', $req->userId)->get();
         return response()->json($userPosts);
     }
 
     public function makePost(Request $request) {
-        $user = user::where('userId', $request->userId)->first();
+        $user = User::where('userId', $request->userId)->first();
         $post = [
             'userId' => $request->userId,
             'firstName' => $user->firstName,
@@ -50,19 +62,45 @@ class PostsController extends Controller
     
         $newPost->fill($post);
         $newPost->save();
-        $allPosts = post::all();
+        $allPosts = Post::all();
         return response()->json($allPosts);
     }
     
+    public function likePost(Request $req) {
+
+        $like = ['user_id' => $req->userId, 'post_id' => $req->postId];
+        $postIsAlreadyLiked = Like::where('user_id', $req->userId)->where('post_id', $req->postId)->first();
+        $post = Post::where('postId', $req->postId)->get();
+
+        if($postIsAlreadyLiked) {
+            $postIsAlreadyLiked->delete();
+            $post[0]['likedByCurrentUser'] = false;
+            $post = Post::withCount('likes')->find($req->postId);
+
+            return response()->json($post, 202);
+        } else {
+            $newLike = new Like;
+
+            $newLike->fill($like);
+            $newLike->save();
+
+            $post = Post::withCount('likes')->find($req->postId);
+            $post->likedByCurrentUser = $postIsAlreadyLiked ? false : true;
+            
+            return response()->json($post, 201);
+        }
+
+    }
+
     public function deletePost($postId) {
         
-        $file = post::where('postId', $postId)->first();
+        $file = Post::where('postId', $postId)->first();
         if ($file->picturePath) {
             unlink(public_path('assets/' . $file->picturePath));
         }
 
-        post::where('postId', $postId)->delete();
-        $allPosts = post::all();
+        Post::where('postId', $postId)->delete();
+        $allPosts = Post::all();
     
         return response()->json($allPosts);
     }

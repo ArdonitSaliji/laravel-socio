@@ -30,7 +30,8 @@ Route::get('/users/{userId}/friends', [UsersController::class, 'getUserFriends']
 Route::patch('/users/{id}/{friendId}', [UsersController::class, 'addOrRemoveFriend']);
 
 // Post Routes
-Route::get('/posts', [PostsController::class, 'getAllPosts']);
+Route::get('/{userId}/posts', [PostsController::class, 'getAllPosts']);
 Route::get('/posts/{userId}/posts', [PostsController::class, 'getUserPosts']);
 Route::post('/posts', [PostsController::class, 'makePost']);
 Route::post('/posts/{postId}/delete', [PostsController::class, 'deletePost']);
+Route::patch('/posts/{postId}/like', [PostsController::class, 'likePost']);

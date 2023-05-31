@@ -11,13 +11,12 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
 
     // ! 'POSTS' Widget
 
-    const getPosts = async () => {
-        const response = await fetch('http://localhost:8000/posts', {
+    const getAllPosts = async () => {
+        const response = await fetch(`http://localhost:8000/${userId}/posts`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
-
         dispatch(setPosts({ posts: data }));
     };
 
@@ -35,7 +34,7 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
         if (isProfile) {
             getUserPosts();
         } else {
-            getPosts();
+            getAllPosts();
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -51,6 +50,8 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
                     location,
                     picturePath,
                     userPicturePath,
+                    likes_count,
+                    likedByCurrentUser,
                 }) => (
                     <PostWidget
                         key={postId}
@@ -62,6 +63,8 @@ const PostsWidget = ({ userId, isProfile = false, profile }) => {
                         picturePath={picturePath}
                         userPicturePath={userPicturePath}
                         profile={userId === loggedInUser.userId ? true : false}
+                        likes_count={likes_count}
+                        likedByCurrentUser={likedByCurrentUser}
                     />
                 )
             )}

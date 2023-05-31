@@ -24,13 +24,12 @@ const PostWidget = ({
     picturePath,
     userPicturePath,
     profile,
+    likes_count,
+    likedByCurrentUser,
 }) => {
     const [isComments, setIsComments] = useState(false);
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
-    const loggedInUserId = useSelector((state) => state.user.id);
-    // const isLiked = Boolean(likes[loggedInUserId]);
-    // const likeCount = likes && Object.keys(likes).length;
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
@@ -43,8 +42,9 @@ const PostWidget = ({
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId: loggedInUserId }),
+            body: JSON.stringify({ userId: userId }),
         });
+
         const updatedPost = await response.json();
         dispatch(setPost({ post: updatedPost }));
     };
@@ -60,7 +60,6 @@ const PostWidget = ({
                 userId: userId,
             }),
         });
-
         const posts = await response.json();
         dispatch(setPosts({ posts: posts }));
     };
@@ -103,13 +102,13 @@ const PostWidget = ({
                 <FlexBetween gap='1rem'>
                     <FlexBetween gap='0.3rem'>
                         <IconButton onClick={patchLike}>
-                            {/* {isLiked ? (
+                            {likedByCurrentUser ? (
                                 <FavoriteOutlined sx={{ color: primary }} />
                             ) : (
                                 <FavoriteBorderOutlined />
-                            )} */}
+                            )}
                         </IconButton>
-                        <Typography>{/* {likeCount} */}</Typography>
+                        <Typography>{likes_count}</Typography>
                     </FlexBetween>
 
                     <FlexBetween gap='0.3rem'>

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\user;
-use App\Models\message;
+use App\Models\User;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 class UsersController extends Controller
@@ -16,7 +16,7 @@ class UsersController extends Controller
                 $firstName = $nameParts[0];
                 $lastName = isset($nameParts[1]) ? $nameParts[1] : null;
         
-                $query = user::query();
+                $query = User::query();
                 if (count($nameParts) == 1) {
                     $query->where('firstName', 'like', $firstName . '%');
                 } else if (count($nameParts) == 2) {
@@ -32,7 +32,7 @@ class UsersController extends Controller
         }
     }
     public function getUserProfile($userId) {
-        $findUser = user::where('userId', $userId)->first();
+        $findUser = User::where('userId', $userId)->first();
         if($findUser) {
             return response()->json($findUser, 200);  
         } else {
@@ -41,17 +41,17 @@ class UsersController extends Controller
     }
 
     public function getUserFriends($userId) {
-        $user = user::where('userId', $userId)->first();
+        $user = User::where('userId', $userId)->first();
 
         $parse = json_decode($user->friends, true);
                 
-        $userFriends = user::whereIn('userId', $parse)->get();
+        $userFriends = User::whereIn('userId', $parse)->get();
         return response()->json($userFriends);
     }
 
     public function addOrRemoveFriend($userId, $friendId) {
-        $user = user::where('userId', $userId)->first();
-        $friend = user::where('userId', $friendId)->first();
+        $user = User::where('userId', $userId)->first();
+        $friend = User::where('userId', $friendId)->first();
         
         $userFriends = json_decode($user->friends, true);
         $friendFriends = json_decode($friend->friends, true);
@@ -79,15 +79,15 @@ class UsersController extends Controller
         $user->save();
         $friend->save();
         $user->friends = json_decode($user->friends, true);
-        $userFriends = user::whereIn('userId', $user->friends)->get();
+        $userFriends = User::whereIn('userId', $user->friends)->get();
         return response()->json($userFriends);
     }
 
     public function messagesWithFriend(Request $req) {
-        $friend = user::where('userId', $req->friendId)->first();
+        $friend = User::where('userId', $req->friendId)->first();
 
-        $userMessages = message::where('userId', $req->userId)->where('friendId', $req->friendId)->first();
-        $friendMessages = message::where('userId', $req->friendId)->where('friendId', $req->userId)->first();
+        $userMessages = Message::where('userId', $req->userId)->where('friendId', $req->friendId)->first();
+        $friendMessages = Message::where('userId', $req->friendId)->where('friendId', $req->userId)->first();
 
         if ($userMessages) {
             return response()->json(['friend' => $friend, 'messages' => $userMessages]);
@@ -117,8 +117,8 @@ class UsersController extends Controller
         $friendId = $req->friendId;
         $input = $req->message;
         
-        $chat = message::where('userId', $userId)->where('friendId', $friendId)->first();
-        $friendChat = message::where('userId', $friendId)->where('friendId', $userId)->first();
+        $chat = Message::where('userId', $userId)->where('friendId', $friendId)->first();
+        $friendChat = Message::where('userId', $friendId)->where('friendId', $userId)->first();
 
         if ($chat) {
             $chat->chat = json_decode($chat->chat, true);

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\user;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use League\MimeTypeDetection\OverridingExtensionToMimeTypeMap;
@@ -10,7 +10,7 @@ use League\MimeTypeDetection\OverridingExtensionToMimeTypeMap;
 class AuthController extends Controller
 {
     public function login() {
-        $auth = user::where('email', request('email'))->where('password', request('password'))->first();
+        $auth = User::where('email', request('email'))->where('password', request('password'))->first();
         if ($auth) {
             return response()->json(['user' => $auth, 'token' => 1234], 200);
         } 
@@ -19,7 +19,7 @@ class AuthController extends Controller
     }
 
     public function signup() {
-        $userExists = user::where('email', request('email'))->first();
+        $userExists = User::where('email', request('email'))->first();
         
         if ($userExists) {
             return response()->json(['message' =>'Email already exists!'], 409);
